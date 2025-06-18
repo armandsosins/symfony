@@ -9,7 +9,7 @@ services:
       - .:/srv/app
     environment:
       APP_ENV: dev
-      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/symf6-app?serverVersion=mariadb-10.8.3&charset=utf8mb4"
+      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/symf6-db?serverVersion=mariadb-10.8.3&charset=utf8mb4"
   
 
     depends_on:
