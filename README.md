@@ -35,8 +35,8 @@ Symfony home work.
 
 ## Installation
 
-1. docker compose up --build
-2. symfony server:start
-3. symfony console doctrine:database:create
-4. symfony console doctrine:migrations:migrate
-5. symfony console app:create-user -pass --email (custom command to create user)
+1. docker compose up --build // Build and spin up PHP, nginx, mysql
+2. symfony server:start // start symfony app
+3. symfony console doctrine:database:create // create DB
+4. symfony console doctrine:migrations:migrate // create entities as asked from task
+5. symfony console app:create-user -pass --email // custom command to create user
