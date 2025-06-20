@@ -6,6 +6,7 @@ Symfony home work.
 
 1. [Description](#description)
 2. [Installation](#installation)
+3. [Routes](#routes)
 
 ## Description
 
@@ -40,3 +41,8 @@ Symfony home work.
 3. symfony console doctrine:database:create // create DB
 4. symfony console doctrine:migrations:migrate // create entities as asked from task
 5. symfony console app:create-user -pass --email // custom command to create user
+
+## Routes
+
+1. /api API platform route
+2. /admin SonataAdminBundle admin panel route
