@@ -4,36 +4,60 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ArticleRepository;
+use ApiPlatform\Metadata\ApiResource;
 
+use App\Repository\ArticleRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
+use App\Controller\ArticleController;
+
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+
+#[ApiResource(normalizationContext: ['groups' => ['get']])]
+#[Get]
+#[GetCollection]
+#[Patch(denormalizationContext: ['groups' => ['update']])]
+#[Post(denormalizationContext: ['groups' => ['create']],
+    uriTemplate: '/articles',
+    controller: ArticleController::class)]
+#[Delete]
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('get')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 1, max: 255)]
+    #[Groups(['get', 'update', 'create'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 5)]
+    #[Groups(['get', 'update', 'create'])]
     private ?string $body = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get', 'create'])]
     private ?User $author = null;
 
     #[ORM\Column]
+    #[Groups('get')]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
+    #[Groups('get')]
     private ?\DateTime $updatedAt = null;
 
     public function getId(): ?int
@@ -101,6 +125,11 @@ class Article
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
@@ -111,6 +140,6 @@ class Article
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new \DateTime();  // Update only updatedAt when the entity is updated
+        $this->updatedAt = new \DateTime();
     }
 }

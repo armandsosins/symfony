@@ -8,7 +8,8 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Sonata\DoctrineORMAdminBundle\Filter\DateRangeFilter;
+
 
 final class ArticleAdmin extends AbstractAdmin
 {
@@ -21,24 +22,41 @@ final class ArticleAdmin extends AbstractAdmin
             ->add('body')
             ->add('author', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'email',  // Or any other field you want to display (e.g., 'email')
-                'placeholder' => 'Choose an author',  // Optional placeholder text
+                'choice_label' => 'email',
+                'placeholder' => 'Choose an author',
             ]);
     }
     protected function configureDatagridFilters(DatagridMapper $dataGrid): void
     {
         $dataGrid
             ->add('title')
-        ;
+            ->add('createdAt', DateRangeFilter::class)
+            ->add('updatedAt', DateRangeFilter::class)
+            ->add('author', null, [
+                'field_type' => EntityType::class,
+                'field_options' => [
+                    'class' => User::class,
+                    'choice_label' => 'email',
+                    'placeholder' => 'Choose an author',
+                ],
+            ]);
+
     }
 
     protected function configureListFields(ListMapper $list): void
     {
         $list
             ->add('title')
-            ->add('body')
+            ->add('author.email')
             ->add('createdAt')
             ->add('updatedAt')
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ]);
         ;
     }
 
@@ -47,6 +65,7 @@ final class ArticleAdmin extends AbstractAdmin
         $show
             ->add('title')
             ->add('body')
+            ->add('author.email')
             ->add('createdAt')
             ->add('updatedAt')
         ;
